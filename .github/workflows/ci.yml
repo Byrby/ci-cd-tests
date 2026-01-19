@@ -1,0 +1,26 @@
+name: Ma première CI/CD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    # On utilise l'Ubuntu latest pour la build
+    runs-on: ubuntu-latest
+
+    steps:
+      # On récupère le code via le git
+      - uses: actions/checkout@v3
+      # On utilise/install Node.js 20.x
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+          cache: 'npm'
+      # On installe les dépendances
+      - run: npm ci
+      # On lance le linter
+      - run: npm run lint
+      # On lance les tests
+      - run: npm test
