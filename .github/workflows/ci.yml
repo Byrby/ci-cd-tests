@@ -1,38 +1,65 @@
-name: Ma première CI/CD
+name: Pipeline DevSecOps EPF
 
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-  build:
-    # On utilise l'Ubuntu latest pour la build
+  security-and-build:
     runs-on: ubuntu-latest
 
     steps:
-      # On récupère le code via le git
-      - uses: actions/checkout@v3
-      # On utilise/install Node.js 20.x
+      - uses: actions/checkout@v4
+
       - name: Use Node.js 20.x
         uses: actions/setup-node@v3
         with:
           node-version: 20.x
           cache: 'npm'
-      # On installe les dépendances
-      - run: npm ci
-      # On lance le linter
-      - run: npm run lint
-      # On lance les tests
-      - run: npm test
+
+      - name: Installation des dépendances
+        run: npm ci
+
+      # --- ÉTAPE SCA (Software Composition Analysis) ---
+      - name: SCA - Audit des dépendances (npm audit)
+        run: npm audit --audit-level=high
+
+      # --- ÉTAPE SAST (Static Application Security Testing) ---
+      - name: SAST - Scan du code source (Semgrep)
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: p/javascript
+
+      - name: Linter (Qualité du code)
+        run: npm run lint
+
+      - name: Tests unitaires (Logique métier)
+        run: npm test
+
+      # --- NOTIFICATION EN CAS D'ÉCHEC ---
+      - name: Notification d'échec (Discord)
+        if: failure()
+        run: |
+          echo "### ❌ Échec de la Pipeline de Sécurité" >> $GITHUB_STEP_SUMMARY
+          echo "Une vulnérabilité ou un bug a été détecté. Vérifiez les logs SAST/SCA." >> $GITHUB_STEP_SUMMARY
+          
+          # Envoi d'un Webhook Discord
+          # Les étudiants doivent créer un Webhook dans Discord et l'ajouter en secret : DISCORD_WEBHOOK
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d "{\"content\": \"🚨 **Alerte Sécurité CI/CD** 🚨\n**Projet :** ${{ github.repository }}\n**Statut :** ÉCHEC\n**Cause :** Faille détectée ou tests KO.\n**Lien :** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
+               ${{ secrets.DISCORD_WEBHOOK }}
 
   deploy:
-    # On utilise l'Ubuntu latest pour la build
+    needs: security-and-build
     runs-on: ubuntu-latest  
+    if: github.ref == 'refs/heads/main' # On ne déploie que depuis la branche main
 
     steps:
       - uses: ttskch/render-deploy@v1.0.0
         with:
-          api-key: api-key
-          service-id: service-id
-
-          
+          # On utilise maintenant le Secret pour la sécurité
+          api-key: ${{ secrets.RENDER_API_KEY }}
+          service-id: srv-d5pi8d1r0fns73f28f9g
