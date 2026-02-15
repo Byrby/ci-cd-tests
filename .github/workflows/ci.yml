@@ -32,5 +32,7 @@ jobs:
     steps:
       - uses: ttskch/render-deploy@v1.0.0
         with:
-          api-key: rnd_ImtYgUcM118UWME1pfF2Wa7zdt6j
-          service-id: srv-d5pi8d1r0fns73f28f9g
+          api-key: api-key
+          service-id: service-id
+
+          

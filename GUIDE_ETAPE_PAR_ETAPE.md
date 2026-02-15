@@ -278,17 +278,12 @@ jobs:
   # [Code build]
 
   deploy:
-    needs: build # S'exécute seulement si build réussit
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' # Seulement sur main
 
     steps:
       - uses: actions/checkout@v3
       - name: Deploy to Render
         uses: johnbeynon/render-deploy-action@v0.0.8
-        with:
-          service-id: srv-d5mkadhr0fns73f23bm0
-          api-key: 'rnd_SdftNu7TwBa937qGItyAtIKkiRFe'
 ```
 
 ## Etape 4 : utilisation des variables d'envrionnement sur GitHub
@@ -297,8 +292,8 @@ Modifiez le pipeline CI/CD pour utiliser les variables d'environnement sur GitHu
 
 ```yaml
 with:
-  service-id: srv-d5mkadhr0fns73f23bm0
-  api-key: 'rnd_SdftNu7TwBa937qGItyAtIKkiRFe'
+  service-id: service-id
+  api-key: api-key
 ```
 
 Doit devenir :
