@@ -49,7 +49,7 @@ jobs:
           # Les étudiants doivent créer un Webhook dans Discord et l'ajouter en secret : DISCORD_WEBHOOK
           curl -H "Content-Type: application/json" \
                -X POST \
-               -d "{\"content\": \"🚨 **Alerte Sécurité CI/CD** 🚨\n**Projet :** ${{ github.repository }}\n**Statut :** ÉCHEC\n**Cause :** Faille détectée ou tests KO.\n**Lien :** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
+               -d "{\"content\": \"Ça marche pas !\"}" \
                ${{ secrets.DISCORD_WEBHOOK }}
 
   deploy:
