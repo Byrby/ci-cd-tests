@@ -22,11 +22,11 @@ jobs:
       - name: Installation des dépendances
         run: npm ci
 
-      # --- ÉTAPE SCA (Software Composition Analysis) ---
+      # --- TP Part 3 : Automatiser la détection (SCA) ---
       - name: SCA - Audit des dépendances (npm audit)
         run: npm audit --audit-level=high
 
-      # --- ÉTAPE SAST (Static Application Security Testing) ---
+      # --- TP Part 4 : Automatiser la détection (SAST) ---
       - name: SAST - Scan du code source (Semgrep)
         uses: semgrep/semgrep-action@v1
         with:
@@ -42,8 +42,8 @@ jobs:
       - name: Notification d'échec (Discord)
         if: failure()
         run: |
+          # --- TP Part 5 : La Boucle de Rétroaction (Feedback) ---
           echo "### ❌ Échec de la Pipeline de Sécurité" >> $GITHUB_STEP_SUMMARY
-          echo "Une vulnérabilité ou un bug a été détecté. Vérifiez les logs SAST/SCA." >> $GITHUB_STEP_SUMMARY
           
           # Envoi d'un Webhook Discord
           # Les étudiants doivent créer un Webhook dans Discord et l'ajouter en secret : DISCORD_WEBHOOK
