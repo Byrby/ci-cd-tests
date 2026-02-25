@@ -38,19 +38,19 @@ jobs:
       - name: Tests unitaires (Logique métier)
         run: npm test
 
-      # --- NOTIFICATION EN CAS D'ÉCHEC ---
-      - name: Notification d'échec (Discord)
-        if: failure()
-        run: |
-          # --- TP Part 5 : La Boucle de Rétroaction (Feedback) ---
-          echo "### ❌ Échec de la Pipeline de Sécurité" >> $GITHUB_STEP_SUMMARY
+      # # --- NOTIFICATION EN CAS D'ÉCHEC ---
+      # - name: Notification d'échec (Discord)
+      #   if: failure()
+      #   run: |
+      #     # --- TP Part 5 : La Boucle de Rétroaction (Feedback) ---
+      #     echo "### ❌ Échec de la Pipeline de Sécurité" >> $GITHUB_STEP_SUMMARY
           
-          # Envoi d'un Webhook Discord
-          # Les étudiants doivent créer un Webhook dans Discord et l'ajouter en secret : DISCORD_WEBHOOK
-          curl -H "Content-Type: application/json" \
-               -X POST \
-               -d "{\"content\": \"Ça marche pas !\"}" \
-               ${{ secrets.DISCORD_WEBHOOK }}
+      #     # Envoi d'un Webhook Discord
+      #     # Les étudiants doivent créer un Webhook dans Discord et l'ajouter en secret : DISCORD_WEBHOOK
+      #     curl -H "Content-Type: application/json" \
+      #          -X POST \
+      #          -d "{\"content\": \"Ça marche pas !\"}" \
+      #          ${{ secrets.DISCORD_WEBHOOK }}
 
   deploy:
     needs: security-and-build
